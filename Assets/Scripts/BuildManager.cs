@@ -1,0 +1,101 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+public class BuildManager : MonoBehaviour {
+
+    public static BuildManager instance;
+    
+    private int turretToBuild; // Once turret has been selected on the menu always do this
+    private Placement selectedPlacement; // Currently selected placement
+    public GameObject buildEffect; // Effect to show when item is built
+    public GameObject sellEffect; // Effect to show when item is sold
+    public PlacementUI placementUI; // Interface which shows when building
+
+    public List<GameObject> turretPrefabs;
+
+    private bool sellMode;
+
+    void Awake ()
+    {
+        sellMode = false;
+        instance = this; // singleton
+    }
+
+    // Dynamic Property
+    public bool CanBuild { get { return turretToBuild != -1; } }
+    public bool HasMoney {
+        get {
+            return PlayerStats.money >= 0; // turretToBuild.cost;
+        }
+    }
+
+    public void SelectPlacement(Placement placement)
+    {
+        // If the same placement has been clicked again
+        // Then close it.
+        if (placement == selectedPlacement)
+        {
+            DeselectPlacement();
+            return;
+        }
+
+        selectedPlacement = placement;
+        turretToBuild = -1;
+
+        placementUI.SetTarget(placement);
+        placementUI.Show();
+    }
+
+    public void SelectTurretToBuild(int turret)
+    {
+        turretToBuild = turret;
+        DeselectPlacement();
+        DisableSellMode();
+    }
+
+    public int GetTurretToBuild()
+    {
+        return turretToBuild;
+    }
+
+    public void DeselectPlacement()
+    {
+        selectedPlacement = null;
+        placementUI.Hide();
+    }
+
+    public void ToggleSellMode()
+    {
+        if (sellMode) DisableSellMode();
+        else EnableSellMode();
+    }
+
+    public void EnableSellMode()
+    {
+        sellMode = true;
+        turretToBuild = -1;
+        DeselectPlacement();
+    }
+
+    public void DisableSellMode()
+    {
+        sellMode = false;
+    }
+
+    public string GetBuildMode()
+    {
+        if(sellMode)
+        {
+            return "Sell";
+        }
+        else if(turretToBuild != -1)
+        {
+            return "Buy";
+        }
+        else
+        {
+            return "None";
+        }
+    }
+
+}
