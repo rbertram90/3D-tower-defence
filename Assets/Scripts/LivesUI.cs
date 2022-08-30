@@ -5,13 +5,15 @@ public class LivesUI : MonoBehaviour {
 
     public Text LivesText;
 
+	private GameManager _gameManager;
+
 	// Use this for initialization
 	void Start () {
-		
-	}
+        _gameManager = FindObjectOfType<GameManager>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        LivesText.text = PlayerStats.lives + " LIVES";
+        LivesText.text = _gameManager.Lives.Value + " Lives";
 	}
 }

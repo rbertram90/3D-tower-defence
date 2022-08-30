@@ -52,7 +52,7 @@ public class Turret3D : AbstractTurret, IBuildable
     // should we be putting more functionality into the turret?
     void OnMouseDown ()
     {
-        placement.performOnMouseDown();
+        RealPlacement.performOnMouseDown();
     }
 
     // Use this for initialization
@@ -62,7 +62,11 @@ public class Turret3D : AbstractTurret, IBuildable
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
         targetingMode = TargetingMode.Closest;
         buildManager = BuildManager.instance;
-        range = 5f;
+        range = 5f; // this is the radius
+
+        // Set the size of the target circle - note x and z should be the same.
+        // Multiply by 2 to get the diameter
+        transform.GetChild(2).transform.localScale = new Vector3(range / transform.localScale.x * 2, 0, range / transform.localScale.z * 2);
     }
 
     // Update is called once per frame
@@ -98,6 +102,7 @@ public class Turret3D : AbstractTurret, IBuildable
             fireCountdown -= Time.deltaTime;
         }
     }
+
     public Vector3 GetBuildPosition(Placement parent)
     {
         return parent.transform.position + positionOffset;
@@ -148,7 +153,7 @@ public class Turret3D : AbstractTurret, IBuildable
     void Lazer()
     {
         targetEnemy.TakeDamage(damagePerSecond * Time.deltaTime);
-        targetEnemy.Slow(slowPercent);
+        // targetEnemy.Slow(slowPercent);
 
         if (!lineRenderer.enabled)
             lineRenderer.enabled = true;

@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class Shop : MonoBehaviour
 {
-    public TurretBlueprint lazer;
-    public TurretBlueprint flamethrower;
-
     BuildManager bM;
 
     // Use this for initialization

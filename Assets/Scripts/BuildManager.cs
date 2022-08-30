@@ -44,6 +44,10 @@ public class BuildManager : MonoBehaviour {
 
         placementUI.SetTarget(placement);
         placementUI.Show();
+
+        if (placement.turret.transform.GetChild(2).name == "ShootRadius") {
+            placement.turret.transform.GetChild(2).gameObject.SetActive(true);
+        }
     }
 
     public void SelectTurretToBuild(int turret)
@@ -60,6 +64,12 @@ public class BuildManager : MonoBehaviour {
 
     public void DeselectPlacement()
     {
+        if (selectedPlacement != null && selectedPlacement.turret != null) {
+            if (selectedPlacement.turret.transform.GetChild(2).name == "ShootRadius") {
+                selectedPlacement.turret.transform.GetChild(2).gameObject.SetActive(false);
+            }
+        }
+
         selectedPlacement = null;
         placementUI.Hide();
     }

@@ -48,7 +48,7 @@ public class TimedWaveSpawner : MonoBehaviour
             yield return new WaitForSeconds(0.5f); // delay
         }
 
-        PlayerStats.rounds++;
+        // PlayerStats.rounds++;
         waveNumber++;
     }
 

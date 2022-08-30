@@ -10,7 +10,8 @@ public class GameOver : MonoBehaviour {
 
     void OnEnable()
     {
-        roundsText.text = PlayerStats.rounds.ToString();
+        WaveSpawner spawner = FindObjectOfType<WaveSpawner>();
+        roundsText.text = spawner.WaveNumber.ToString();
     }
 
     public void Retry()

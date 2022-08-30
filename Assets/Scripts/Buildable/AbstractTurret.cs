@@ -3,8 +3,32 @@ using UnityEngine;
 
 public abstract class AbstractTurret : NetworkBehaviour
 {
-    [HideInInspector]
-    public Placement placement;
+    // [HideInInspector]
+    // public Placement placement;
+
+    public NetworkVariable<NetworkObjectReference> AttachedPlacement = new NetworkVariable<NetworkObjectReference>();
+
+    // public NetworkVariable<float> Speed = new NetworkVariable<float>();
+
+    public Placement RealPlacement
+    {
+        get {
+            GameObject g = (GameObject) AttachedPlacement.Value;
+
+            if (g.GetComponent<Placement>() != null) {
+                return g.GetComponent<Placement>();
+            }
+
+            Placement placementInChild = g.transform.GetChild(PlacepointPlacementIndex.Value).GetComponent<Placement>();
+
+            if (placementInChild != null) {
+                return placementInChild;
+            }
+            return null;
+        }
+    }
+
+    public NetworkVariable<int> PlacepointPlacementIndex = new NetworkVariable<int>(); // this might not need to be a network variable?
 
     protected float _range = 5f;
     public float range
@@ -26,7 +50,7 @@ public abstract class AbstractTurret : NetworkBehaviour
         // Check that enemy is in range
         if (distanceToEnemy > range) return false;
 
-        switch (placement.LookDirection) {
+        switch (RealPlacement.LookDirection) {
             case Placement.Facing.Up:
                 return transform.position.y <= enemy.transform.position.y;
             case Placement.Facing.Down:
@@ -89,7 +113,7 @@ public abstract class AbstractTurret : NetworkBehaviour
             float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
             if (!canShoot(enemy, distanceToEnemy)) continue;
 
-            float enemyHealth = enemy.GetComponent<Enemy>().health;
+            float enemyHealth = enemy.GetComponent<Enemy>().Health.Value;
 
             if (enemyHealth > highestHealth && distanceToEnemy <= range) {
                 highestHealth = enemyHealth;
@@ -109,7 +133,7 @@ public abstract class AbstractTurret : NetworkBehaviour
             float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
             if (!canShoot(enemy, distanceToEnemy)) continue;
 
-            float enemyHealth = enemy.GetComponent<Enemy>().health;
+            float enemyHealth = enemy.GetComponent<Enemy>().Health.Value;
 
             if (enemyHealth < lowestHealth && distanceToEnemy <= range) {
                 lowestHealth = enemyHealth;
@@ -129,7 +153,7 @@ public abstract class AbstractTurret : NetworkBehaviour
             float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
             if (!canShoot(enemy, distanceToEnemy)) continue;
 
-            float enemySpeed = enemy.GetComponent<Enemy>().speed;
+            float enemySpeed = enemy.GetComponent<Enemy>().Speed.Value;
 
             if (enemySpeed > fastest && distanceToEnemy <= range) {
                 fastest = enemySpeed;
@@ -149,7 +173,7 @@ public abstract class AbstractTurret : NetworkBehaviour
             float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
             if (!canShoot(enemy, distanceToEnemy)) continue;
 
-            float enemySpeed = enemy.GetComponent<Enemy>().speed;
+            float enemySpeed = enemy.GetComponent<Enemy>().Speed.Value;
 
             if (enemySpeed < slowest && distanceToEnemy <= range) {
                 slowest = enemySpeed;

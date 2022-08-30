@@ -4,7 +4,7 @@ public class Bullet : MonoBehaviour {
 
     private Transform target;
     public float speed = 70f;
-    public int damage = 50;
+    public int damage = 1;
     public float explosionRadius = 0f;
     public GameObject impactEffect;
 
@@ -48,12 +48,10 @@ public class Bullet : MonoBehaviour {
         GameObject effectInstance = (GameObject) Instantiate(impactEffect, transform.position, transform.rotation);
         Destroy(effectInstance, 2.0f);
 
-        if(explosionRadius > 0f)
-        {
+        if (explosionRadius > 0f) {
             Explode();
         }
-        else
-        {
+        else {
             Damage(target);
         }
 
@@ -64,8 +62,9 @@ public class Bullet : MonoBehaviour {
     {
         Enemy e = enemy.GetComponent<Enemy>();
 
-        if (e != null)
+        if (e != null) {
             e.TakeDamage(damage);
+        }
     }
 
     // Damage all within range

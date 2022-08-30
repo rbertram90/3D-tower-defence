@@ -1,14 +1,21 @@
-﻿using System.Collections;
+﻿using Mono.Cecil.Cil;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour {
+public class Enemy : NetworkBehaviour {
 
     public float startSpeed = 4f;
-    [HideInInspector]
-    public float speed;
 
-    public float health = 100;
+    // [HideInInspector]
+    // public float speed;
+
+    public NetworkVariable<float> Speed = new NetworkVariable<float>();
+
+    public NetworkVariable<float> Health = new NetworkVariable<float>();
+
+    // public float health = 100;
     public int worth = 10;
     
     public GameObject deathEffect;
@@ -19,42 +26,55 @@ public class Enemy : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        speed = 5f + (Random.value * 4f);
-
         gM = GameManager.instance;
         wS = WaveSpawner.instance;
 
-        int wavenum = gM.GetWaveSpawner.getWaveNumber();
-        health = 100 + 10 * wavenum;
+        if (IsHost) {
+            // Server sets the speed.
+            Speed.Value = 5f + (Random.value * 4f);
+
+            Health.Value = 2 + wS.WaveNumber;
+        }
+
+        // int wavenum = gM.GetWaveSpawner.getWaveNumber();
+        // health = 100 + 10 * wavenum;
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        Health.OnValueChanged += (float oldValue, float newValue) => {
+            if (newValue <= 0) {
+                // Host only
+                if (IsHost) {
+                    // PlayerStats.money += worth;
+
+                    wS.notifyDeath(this, true);
+
+                    Destroy(gameObject);
+                }
+
+                // All clients
+                Die();
+            }
+        };
     }
 
     public void TakeDamage(float amount)
     {
-        health -= amount;
-
-        if(health <= 0)
-        {
-            Die();
+        if (IsHost) {
+            Health.Value -= amount;
         }
     }
 
-    public void Slow(float percent)
-    {
-        speed = startSpeed * (1f - percent);
-    }
+    // public void Slow(float percent)
+    // {
+    //     speed = startSpeed * (1f - percent);
+    // }
 
     void Die()
     {
-        PlayerStats.kills++;
-
-        PlayerStats.money += worth;
-
         GameObject effect = Instantiate(deathEffect, transform.position, Quaternion.identity);
         Destroy(effect, 5f);
-
-        wS.notifyDeath(this);
-
-        Destroy(gameObject);
     }
 
 	// Update is called once per frame

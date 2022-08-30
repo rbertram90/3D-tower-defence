@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.UI;
+using System;
 
+/**
+ * Maybe rename to player manager?
+ */
 public class PlayerStats : NetworkBehaviour
 {
     public static PlayerStats instance;
@@ -12,39 +17,23 @@ public class PlayerStats : NetworkBehaviour
 
     public static int money; // legacy - to be removed
 
-    public static int lives;
-    public int startLives = 20;
+    private NetworkVariable<int> balance = new NetworkVariable<int>();   
 
-    public static int kills;
-    public static int rounds;
-
-    private NetworkVariable<int> balance = new NetworkVariable<int>();
-    private NetworkVariable<int> playersInGame = new NetworkVariable<int>();
+    // public Dictionary<>
 
     void Awake()
     {
         instance = this;
     }
 
-    public int PlayersInGame
-    {
-        get {
-            return playersInGame.Value;
-        }
-    }
-
     public bool PlayerIsHost
     {
-        get {
-            return IsHost;
-        }
+        get => IsHost;
     }
 
     public int Balance
     {
-        get {
-            return balance.Value;
-        }
+        get => balance.Value;
     }
 
     public override void OnNetworkSpawn()
@@ -54,25 +43,20 @@ public class PlayerStats : NetworkBehaviour
         }
     }
 
+    public void DoForAllPlayers(Action<Player> processAction)
+    {
+        if (!IsHost) {
+            return;
+        }
+
+        foreach (KeyValuePair<ulong, NetworkClient> client in NetworkManager.Singleton.ConnectedClients) {
+            processAction(client.Value.PlayerObject.GetComponent<Player>());
+        }
+    }
+
     void Start ()
     {
         // balance.Value = startingBalance;
-        lives = startLives;
-        kills = 0;
-        rounds = 0;
-        playersInGame.Value = 1;
-
-        NetworkManager.OnClientConnectedCallback += (id) => {
-            if (IsServer) {
-                playersInGame.Value++;
-            }
-        };
-
-        NetworkManager.OnClientDisconnectCallback += (id) => {
-            if (IsServer) {
-                playersInGame.Value--;
-            }
-        };
     }
 
     // Note - probabily will change this as expect it will be part of larger logic
@@ -82,4 +66,8 @@ public class PlayerStats : NetworkBehaviour
     {
         balance.Value -= amount;
     }
+
+    // Note - can accept ServerRpcParams params = default to get client
+    // params.Recieve.SenderClientId
+
 }

@@ -8,18 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 5a9a5abd3d9b31a4690696190a74992c
-  - enabled: 0
-    path: Assets/Scenes/Scene001.unity
-    guid: 4977d7011efbed24db509f08f2ae801a
-  - enabled: 0
-    path: Assets/Scenes/Scene002.unity
-    guid: f786f83e29c28dd4d8ddc7d5a4ecbc93
-  - enabled: 0
-    path: Assets/Scenes/Scene003.unity
-    guid: 824bab2c094284b4ab16cfbc5ca87def
-  - enabled: 0
-    path: Assets/Scenes/Scene004.unity
-    guid: 607423a55cfde7546b59904c9cbf79b2
   - enabled: 1
     path: Assets/Scenes/Scene005 - Earth.unity
     guid: 19cfb6937b28961448a3e3423de47708

@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.GraphicsBuffer;
 
 public class Placement : NetworkBehaviour
 {
@@ -146,17 +149,24 @@ public class Placement : NetworkBehaviour
         // Build the placepoint or turret
         GameObject turret = Instantiate(turretPrefab, buildable.GetBuildPosition(this), buildable.GetBuildRotation(this));
 
+        if (turret.tag == "Turret") {
+            Turret3D turretComponent = turret.GetComponent<Turret3D>();
+            // Debug.LogError("GO = " + gameObject.name);
+            if (transform.GetComponent<NetworkObject>() == null) {
+                // we can't set the placement gameobject to placement as it doesn't have the networkobject on directly
+                turretComponent.AttachedPlacement.Value = transform.parent.gameObject;
+                turretComponent.PlacepointPlacementIndex.Value = transform.GetSiblingIndex();
+            }
+            else {
+                turretComponent.AttachedPlacement.Value = gameObject;
+            }
+        }
+
         // Send accross the network
         turret.GetComponent<NetworkObject>().Spawn();
 
         // Set the assigned turret - this will need to be a network variable?
         this.turret = turret;
-
-        if (turret.tag == "Turret")
-        {
-            Turret3D turretComponent = turret.GetComponent<Turret3D>();
-            turretComponent.placement = this;
-        }
 
         // turretBlueprint = blueprint;
 
@@ -182,7 +192,7 @@ public class Placement : NetworkBehaviour
         Destroy(effect, 3f);
 
         Turret3D turretComponent = turret.GetComponent<Turret3D>();
-        turretComponent.placement = this;
+        // turretComponent.placement = this;
         turretComponent.isUpgraded = true;
     }
 
@@ -202,4 +212,16 @@ public class Placement : NetworkBehaviour
     {
         return transform.position + positionOffset;
     }
+    /*
+    public static explicit operator Placement(NetworkObjectReference v)
+    {
+        if (v.TryGet(out NetworkObject targetObject)) {
+            return targetObject.GetComponent<Placement>();
+        }
+
+        return null;
+
+        // throw new NotImplementedException();
+    }
+    */
 }

@@ -21,7 +21,7 @@ public class EnemyMovement : NetworkBehaviour {
 	// Update is called once per frame
 	void Update () {
         Vector3 dir = target.position - transform.position;
-        transform.Translate(dir.normalized * enemy.speed * Time.deltaTime, Space.World);
+        transform.Translate(dir.normalized * enemy.Speed.Value * Time.deltaTime, Space.World);
 
         if (Vector3.Distance(transform.position, target.position) <= 0.2f)
         {
@@ -45,9 +45,7 @@ public class EnemyMovement : NetworkBehaviour {
 
     void EndPath()
     {
-        PlayerStats.lives--;
-
-        WaveSpawner.instance.notifyDeath(enemy);
+        WaveSpawner.instance.notifyDeath(enemy, false);
 
         Destroy(gameObject);
     }
