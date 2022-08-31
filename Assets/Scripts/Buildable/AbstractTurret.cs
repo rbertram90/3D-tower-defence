@@ -1,19 +1,24 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public abstract class AbstractTurret : NetworkBehaviour
 {
-    // [HideInInspector]
-    // public Placement placement;
+    public Transform partToRotate;
+    public Transform firePoint;
 
-    public NetworkVariable<NetworkObjectReference> AttachedPlacement = new NetworkVariable<NetworkObjectReference>();
+    protected Transform target;
 
-    // public NetworkVariable<float> Speed = new NetworkVariable<float>();
+    public NetworkVariable<NetworkObjectReference> AttachedPlacement = new();
+    public NetworkVariable<int> PlacepointPlacementIndex = new(); // this might not need to be a network variable?
+
+    // Upgradable?
+    public NetworkVariable<int> Level = new();
 
     public Placement RealPlacement
     {
         get {
-            GameObject g = (GameObject) AttachedPlacement.Value;
+            GameObject g = (GameObject)AttachedPlacement.Value;
 
             if (g.GetComponent<Placement>() != null) {
                 return g.GetComponent<Placement>();
@@ -28,8 +33,6 @@ public abstract class AbstractTurret : NetworkBehaviour
         }
     }
 
-    public NetworkVariable<int> PlacepointPlacementIndex = new NetworkVariable<int>(); // this might not need to be a network variable?
-
     protected float _range = 5f;
     public float range
     {
@@ -43,6 +46,13 @@ public abstract class AbstractTurret : NetworkBehaviour
     {
         get => _targetingMode;
         set => _targetingMode = value;
+    }
+
+    // Do the same as placement action...hmmm
+    // should we be putting more functionality into the turret?
+    void OnMouseDown()
+    {
+        RealPlacement.performOnMouseDown();
     }
 
     protected bool canShoot(GameObject enemy, float distanceToEnemy)
@@ -184,4 +194,21 @@ public abstract class AbstractTurret : NetworkBehaviour
         return slowestEnemy;
     }
 
+    protected void LockOnTarget()
+    {
+        // Look at target
+        // Vector3 direction = target.position - transform.position;
+        // Quaternion lookRotation = Quaternion.LookRotation(direction);
+        // Lerp smooths the change
+        // Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
+        // Only rotate around y axis
+        // partToRotate.rotation = Quaternion.Euler(-90f, rotation.y, 0f);
+        partToRotate.LookAt(target);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, range);
+    }
 }

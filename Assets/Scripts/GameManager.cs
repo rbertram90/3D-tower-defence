@@ -23,6 +23,8 @@ public class GameManager : NetworkBehaviour
 
     private NetworkVariable<int> ActivePlayerCount = new NetworkVariable<int>();
 
+    public static Player LocalPlayer;
+
     public int PlayersInGame
     {
         get => ActivePlayerCount.Value;
@@ -31,6 +33,11 @@ public class GameManager : NetworkBehaviour
     void Awake()
     {
         instance = this; // singleton
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        LocalPlayer = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<Player>();
     }
 
     // Use this for initialization

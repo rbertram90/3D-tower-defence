@@ -41,6 +41,17 @@ public class PlacementUI : MonoBehaviour {
         upgradeCost.text = "N/A";
         upgradeButton.interactable = false;
 
+        switch (turret.GetType().ToString()) {
+            case "Turret3D":
+                Turret3D turret3 = (Turret3D)turret;
+                int MaxLevel = Turret3D.MaxLevel;
+                if (turret3.Level.Value < MaxLevel) {
+                    upgradeCost.text = "£" + Turret3D.UpgradeCosts[turret3.Level.Value - 1].ToString();
+                    upgradeButton.interactable = true;
+                }
+                break;
+        }
+
         sellPrice.text = "£" + (turret.Cost / 2);
 
         highlightSelectedTargetingModeButton();
@@ -86,17 +97,17 @@ public class PlacementUI : MonoBehaviour {
     {
         defaultButtonColour = Color.white;
 
-        furthestButton.GetComponentInChildren<Text>().fontStyle = UnityEngine.FontStyle.Normal;
+        furthestButton.GetComponentInChildren<Text>().fontStyle = FontStyle.Normal;
         furthestButton.image.color = defaultButtonColour;
-        closestButton.GetComponentInChildren<Text>().fontStyle = UnityEngine.FontStyle.Normal;
+        closestButton.GetComponentInChildren<Text>().fontStyle = FontStyle.Normal;
         closestButton.image.color = defaultButtonColour;
-        stongestButton.GetComponentInChildren<Text>().fontStyle = UnityEngine.FontStyle.Normal;
+        stongestButton.GetComponentInChildren<Text>().fontStyle = FontStyle.Normal;
         stongestButton.image.color = defaultButtonColour;
-        weakestButton.GetComponentInChildren<Text>().fontStyle = UnityEngine.FontStyle.Normal;
+        weakestButton.GetComponentInChildren<Text>().fontStyle = FontStyle.Normal;
         weakestButton.image.color = defaultButtonColour;
-        fastestButton.GetComponentInChildren<Text>().fontStyle = UnityEngine.FontStyle.Normal;
+        fastestButton.GetComponentInChildren<Text>().fontStyle = FontStyle.Normal;
         fastestButton.image.color = defaultButtonColour;
-        slowestButton.GetComponentInChildren<Text>().fontStyle = UnityEngine.FontStyle.Normal;
+        slowestButton.GetComponentInChildren<Text>().fontStyle = FontStyle.Normal;
         slowestButton.image.color = defaultButtonColour;
 
         Button activeButton;

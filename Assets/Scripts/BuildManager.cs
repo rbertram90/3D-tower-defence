@@ -25,7 +25,7 @@ public class BuildManager : MonoBehaviour {
     public bool CanBuild { get { return turretToBuild != -1; } }
     public bool HasMoney {
         get {
-            return PlayerStats.money >= 0; // turretToBuild.cost;
+            return GameManager.LocalPlayer.Balance.Value >= 0;
         }
     }
 

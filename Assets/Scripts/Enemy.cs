@@ -23,7 +23,6 @@ public class Enemy : NetworkBehaviour {
     private GameManager gM;
     private WaveSpawner wS;
 
-	// Use this for initialization
 	void Start ()
     {
         gM = GameManager.instance;
@@ -44,9 +43,12 @@ public class Enemy : NetworkBehaviour {
     {
         Health.OnValueChanged += (float oldValue, float newValue) => {
             if (newValue <= 0) {
+                // Enemy has been killed
                 // Host only
                 if (IsHost) {
-                    // PlayerStats.money += worth;
+                    PlayerStats.instance.DoForAllPlayers((Player p) => {
+                        p.Balance.Value += 50;
+                    });
 
                     wS.notifyDeath(this, true);
 
@@ -74,12 +76,8 @@ public class Enemy : NetworkBehaviour {
     void Die()
     {
         GameObject effect = Instantiate(deathEffect, transform.position, Quaternion.identity);
+
         Destroy(effect, 5f);
     }
 
-	// Update is called once per frame
-	void Update ()
-    {
-
-    }
 }

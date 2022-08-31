@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4132806358264460}
   - component: {fileID: 114250779482866672}
-  - component: {fileID: 114835935599266944}
   - component: {fileID: 114991432990366390}
   - component: {fileID: 114214077071113076}
   - component: {fileID: 114337818884791930}
@@ -49,30 +48,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12f71d72466fbeb429e37e7ee8c1f951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveNumber: 0
+  WaveNumber: 0
   spawnPoint: {fileID: 0}
   enemyPrefab: {fileID: 1311679243890866, guid: b24446539d626ed41a6767c263c1ff4c,
     type: 3}
   roundCompleteUI: {fileID: 1674321792371238, guid: 41da76ab85d277d40a39868236ee650e,
     type: 3}
   waveNumberText: {fileID: 0}
---- !u!114 &114835935599266944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1311433584721652}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc7f62e4ff410df439ef4614ccefd935, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 4006502918414394, guid: b24446539d626ed41a6767c263c1ff4c,
-    type: 3}
-  spawnPoint: {fileID: 0}
-  waveCountdownText: {fileID: 0}
-  timeBetweenWaves: 5.5
 --- !u!114 &114991432990366390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +85,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingBalance: 300
-  startLives: 20
 --- !u!114 &114337818884791930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,6 +99,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   killsText: {fileID: 0}
   gameOverUI: {fileID: 0}
+  TotalKillsMade:
+    m_InternalValue: 0
+  KillsThisRound:
+    m_InternalValue: 0
+  Lives:
+    m_InternalValue: 0
 --- !u!114 &114845992093817098
 MonoBehaviour:
   m_ObjectHideFlags: 0

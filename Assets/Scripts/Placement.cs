@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
-using Unity.VisualScripting;
+﻿using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static UnityEngine.GraphicsBuffer;
 
 public class Placement : NetworkBehaviour
 {
@@ -16,8 +11,6 @@ public class Placement : NetworkBehaviour
 
     [HideInInspector]
     public GameObject turret;
-    [HideInInspector]
-    public TurretBlueprint turretBlueprint;
 
     private Renderer rend;
     private Color startColor;
@@ -94,7 +87,10 @@ public class Placement : NetworkBehaviour
 
     void SellPlacement()
     {
-        PlayerStats.money += 25; // HARD CODED!!!
+        if (IsHost) {
+            // @todo make this a serverrpc?
+            GameManager.LocalPlayer.Balance.Value += 25;
+        }
 
         GameObject effect = Instantiate(bM.sellEffect, GetBuildPosition(), Quaternion.identity);
         Destroy(effect, 3f);
@@ -127,9 +123,15 @@ public class Placement : NetworkBehaviour
 
     // Who is this owned by?!
     [ServerRpc(RequireOwnership = false)]
-    void BuildTurretServerRpc(int TurretType)
+    void BuildTurretServerRpc(int TurretType, ServerRpcParams serverRpcParams = default)
     {
         GameObject turretPrefab = bM.turretPrefabs[TurretType];
+
+        var clientId = serverRpcParams.Receive.SenderClientId;
+        if (! NetworkManager.ConnectedClients.ContainsKey(clientId)) {
+            return;
+        }
+        Player player = NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>();
 
         if (!turretPrefab) {
             Debug.Log("Unable to find prefab for type " + TurretType);
@@ -138,13 +140,13 @@ public class Placement : NetworkBehaviour
 
         IBuildable buildable = turretPrefab.GetComponent<IBuildable>();
 
-        if (PlayerStats.instance.Balance < buildable.Cost) {
+        if (player.Balance.Value < buildable.Cost) {
             Debug.Log("Cannot build turret - not enough monies :(");
             return; // not enough monies
         }
-        
+
         // Take the money
-        PlayerStats.instance.SubtractFromBalanceServerRpc(buildable.Cost);
+        player.Balance.Value -= buildable.Cost;
 
         // Build the placepoint or turret
         GameObject turret = Instantiate(turretPrefab, buildable.GetBuildPosition(this), buildable.GetBuildRotation(this));
@@ -176,52 +178,60 @@ public class Placement : NetworkBehaviour
 
     public void UpgradeTurret()
     {
-        if (PlayerStats.money < turretBlueprint.upgradeCost)
-            return; // not enough monies
+        AbstractTurret turretComponent = turret.GetComponent<AbstractTurret>();
+        int MaxLevel = 1;
+        int UpgradeCost = 0;
 
-        PlayerStats.money -= turretBlueprint.upgradeCost;
+        Debug.Log(turretComponent.GetType().ToString());
 
-        // Remove old turret
-        Destroy(this.turret);
+        switch (turretComponent.GetType().ToString()) {
+            case "Turret3D":
+                MaxLevel = Turret3D.MaxLevel;
+                UpgradeCost = Turret3D.UpgradeCosts[turretComponent.Level.Value - 1];
+                break;
+        }
 
-        // Build a new turret
-        GameObject turret = (GameObject)Instantiate(turretBlueprint.upgradedPrefab, GetBuildPosition(), Quaternion.identity);
-        this.turret = turret;
+        if (turretComponent.Level.Value == MaxLevel) {
+            // No more upgrades
+            Debug.Log("Cannot upgrade, at max level.");
+            return;
+        }
 
-        GameObject effect = (GameObject)Instantiate(bM.buildEffect, GetBuildPosition(), Quaternion.identity);
-        Destroy(effect, 3f);
+        if (GameManager.LocalPlayer.Balance.Value < UpgradeCost) {
+            // Not enough monies
+            Debug.Log("Cannot upgrade, insufficient funds.");
+            return;
+        }
 
-        Turret3D turretComponent = turret.GetComponent<Turret3D>();
-        // turretComponent.placement = this;
-        turretComponent.isUpgraded = true;
+        turretComponent.Level.Value++;
+
+        if (IsHost) {
+            // @todo do this in the RPC or make variable owner updatable?
+            GameManager.LocalPlayer.Balance.Value -= UpgradeCost;
+        }
+
+        // UpgradeTurretServerRpc();
+    }
+
+    [ServerRpc]
+    public void UpgradeTurretServerRpc()
+    {
+
     }
 
     public void SellTurret()
     {
-        PlayerStats.money += turretBlueprint.GetSellPrice();
+        GameManager.LocalPlayer.Balance.Value += 50; // @todo work something out for this.
 
         GameObject effect = (GameObject)Instantiate(bM.sellEffect, GetBuildPosition(), Quaternion.identity);
         Destroy(effect, 3f);
 
-        Destroy(this.turret);
-
-        turretBlueprint = null;
+        Destroy(turret);
     }
 
     public Vector3 GetBuildPosition()
     {
         return transform.position + positionOffset;
     }
-    /*
-    public static explicit operator Placement(NetworkObjectReference v)
-    {
-        if (v.TryGet(out NetworkObject targetObject)) {
-            return targetObject.GetComponent<Placement>();
-        }
 
-        return null;
-
-        // throw new NotImplementedException();
-    }
-    */
 }

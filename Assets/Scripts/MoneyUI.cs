@@ -1,21 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
+using Unity.Netcode;
 
-public class MoneyUI : MonoBehaviour {
+public class MoneyUI : NetworkBehaviour {
 
     public Text moneyText;
 
-	// Use this for initialization
-	void Start ()
-    {
-        
-	}
-	
-	// Update is called once per frame
 	void Update ()
     {
-        moneyText.text = "£" + PlayerStats.instance.Balance;
+        if (NetworkManager.LocalClient != null) {
+            moneyText.text = "£" + NetworkManager.LocalClient.PlayerObject.GetComponent<Player>().Balance.Value;
+        }
+        else {
+            moneyText.text = "£0";
+        }
     }
 }

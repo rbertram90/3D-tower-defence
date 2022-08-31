@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 28d6ce9df4721734d868b0288463f0b8, type: 2}
+  - {fileID: 2100000, guid: bba870da876a3e44aa4bd187d7fd2e70, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -249,21 +249,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46dc1fa4f79f69a4f99f986b6d896510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  partToRotate: {fileID: 4301552644200376}
+  firePoint: {fileID: 4655127158899702}
+  PlacepointPlacementIndex:
+    m_InternalValue: 0
+  Level:
+    m_InternalValue: 0
   button: {fileID: 1936020187880788, guid: d99d3ce9517e1ca489378f37645a3407, type: 3}
   targetingMode: 0
-  isUpgraded: 0
   fireRate: 3
   fireCountdown: 0
   bulletPrefab: {fileID: 1448115389480096, guid: 74ffd955d86ba814eb502f62a86f38f8,
     type: 3}
-  useLazer: 0
-  lineRenderer: {fileID: 0}
-  damagePerSecond: 2
-  slowPercent: 0.5
-  partToRotate: {fileID: 4301552644200376}
-  firePoint: {fileID: 4655127158899702}
-  turnSpeed: 10
-  enemyTag: Enemy
+  Level2Material: {fileID: 2100000, guid: 6fc4cfa1bf18a504183de7473bcb15b2, type: 2}
+  Level3Material: {fileID: 2100000, guid: 81906c186a52dac4c9f3c4d8e20223e1, type: 2}
   positionOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &-1652971400679790876
 MonoBehaviour:

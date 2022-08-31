@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
+using Unity.VisualScripting;
 
 public class WaveSpawner : NetworkBehaviour {
 
@@ -12,17 +13,22 @@ public class WaveSpawner : NetworkBehaviour {
     public GameObject roundCompleteUI;
     public Text waveNumberText;
 
-    public static WaveSpawner instance;
+    private static WaveSpawner _instance;
+    public static WaveSpawner instance { get { return _instance; } }
 
     private List<GameObject> enemies;
     private GameManager gameManager;
 
     void Awake()
     {
-        instance = this; // singleton
+        if (_instance != null && _instance != this) {
+            Destroy(gameObject);
+        }
+        else {
+            _instance = this;
+        }
     }
 
-    // Use this for initialization
     void Start ()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -41,7 +47,6 @@ public class WaveSpawner : NetworkBehaviour {
         base.OnNetworkSpawn();
     }
 	
-	// Update is called once per frame
 	void Update ()
     {
         waveNumberText.text = "Round " + WaveNumber.ToString();
@@ -52,10 +57,12 @@ public class WaveSpawner : NetworkBehaviour {
         return WaveNumber;
     }
 
+    // On click event from 'Next Round' button.
+    // Maybe rename to beginNextRound...
     public void runSpawnWave()
     {
-        if (!IsHost) {
-            return;
+        if (IsHost) {
+            StartCoroutine(SpawnWave());
         }
 
         // Run enemy spawning on server
@@ -66,29 +73,28 @@ public class WaveSpawner : NetworkBehaviour {
         // problem as syncronising the position, rotation of the guns
         // sounds like it would be intensive on server when there are
         // many guns placed in scene.
-        StartCoroutine(SpawnWave());
 
-        roundCompleteUI.SetActive(false);
-
-        // RunSpawnWaveClientRpc();
+        RoundStartedClientRpc();
     }
 
-    /*
     [ClientRpc]
-    public void RunSpawnWaveClientRpc()
+    public void RoundStartedClientRpc()
     {
-        StartCoroutine(SpawnWave());
-
+        NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<Player>().Status.Value = Player.States.Busy;
         roundCompleteUI.SetActive(false);
     }
-    */
+
+    [ClientRpc]
+    public void RoundEndedClientRpc()
+    {
+        roundCompleteUI.SetActive(true);
+    }
 
     public void notifyDeath(Enemy e, bool WasKilled)
     {
         if (IsHost) {
             if (WasKilled) {
                 gameManager.KillsThisRound.Value++;
-
                 gameManager.TotalKillsMade.Value++;
             }
             else {
@@ -100,7 +106,7 @@ public class WaveSpawner : NetworkBehaviour {
 
         if (enemies.Count == 0)
         {
-            roundCompleteUI.SetActive(true);
+            RoundEndedClientRpc();
         }
     }
 

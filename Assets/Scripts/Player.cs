@@ -8,11 +8,10 @@ public class Player : NetworkBehaviour
 {
     public enum States { Busy, Ready };
 
-    public NetworkVariable<States> Status = new NetworkVariable<States>(default, default, NetworkVariableWritePermission.Owner);
-
-    public NetworkVariable<NetworkString> Name = new NetworkVariable<NetworkString>();
-
-    public NetworkVariable<ulong> ClientID = new NetworkVariable<ulong>();
+    public NetworkVariable<States> Status = new(default, default, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<NetworkString> Name = new();
+    public NetworkVariable<ulong> ClientID = new();
+    public NetworkVariable<int> Balance = new();
 
     string[] names = new string[] {
         "John", "James", "Janet", "Mary", "Paul",
@@ -32,15 +31,22 @@ public class Player : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer) {
+        // NetworkSpawn of any player, but this part is run on the server.
+        if (IsHost) {
             Status.Value = States.Busy;
 
+            // Generate a random name for the player
+            // @todo allow the user to change this.
             Random random = new Random();
             Name.Value = names[random.Next(0, names.Length - 1)] + surnames[random.Next(0, surnames.Length)];
 
+            Balance.Value = 300000;
+
+            // Listen for status changes
+            // i.e. when the player has finished building turrets and
+            // is ready to play the next round.
             Status.OnValueChanged += (States oldValue, States newValue) => {
                 if (newValue == States.Ready) {
-
                     bool allReady = true;
 
                     foreach (KeyValuePair<ulong, NetworkClient> client in NetworkManager.Singleton.ConnectedClients) {
@@ -56,9 +62,13 @@ public class Player : NetworkBehaviour
                         GameObject.Find("NextRound").GetComponent<Button>().interactable = true;
                     }
                 }
+                else {
+                    GameObject.Find("NextRound").GetComponent<Button>().interactable = false;
+                }
             };
         }
 
+        // When anyone changes status update the users list
         Status.OnValueChanged += (States oldValue, States newValue) => {
             FindObjectOfType<NetworkUI>().UpdatePlayerList();
         };
