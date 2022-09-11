@@ -14,7 +14,7 @@ public class WaveSpawner : NetworkBehaviour {
     public Text waveNumberText;
 
     private static WaveSpawner _instance;
-    public static WaveSpawner instance { get { return _instance; } }
+    public static WaveSpawner Instance { get { return _instance; } }
 
     private List<GameObject> enemies;
     private GameManager gameManager;
@@ -31,7 +31,7 @@ public class WaveSpawner : NetworkBehaviour {
 
     void Start ()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        gameManager = GameManager.Instance;
         enemies = new List<GameObject>();
         WaveNumber = 0;
     }
@@ -63,6 +63,12 @@ public class WaveSpawner : NetworkBehaviour {
     {
         if (IsHost) {
             StartCoroutine(SpawnWave());
+
+            PlayerStats.Instance.DoForAllPlayers((Player p) => {
+                p.Status.Value = Player.States.Busy;
+            });
+
+            RoundStartedClientRpc();
         }
 
         // Run enemy spawning on server
@@ -73,14 +79,11 @@ public class WaveSpawner : NetworkBehaviour {
         // problem as syncronising the position, rotation of the guns
         // sounds like it would be intensive on server when there are
         // many guns placed in scene.
-
-        RoundStartedClientRpc();
     }
 
     [ClientRpc]
     public void RoundStartedClientRpc()
     {
-        NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<Player>().Status.Value = Player.States.Busy;
         roundCompleteUI.SetActive(false);
     }
 

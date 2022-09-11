@@ -60,6 +60,16 @@ public abstract class AbstractTurret : NetworkBehaviour
         // Check that enemy is in range
         if (distanceToEnemy > range) return false;
 
+        RaycastHit hit;
+
+        // Debug.DrawRay(firePoint.position, transform.forward, Color.green);
+
+        if (Physics.Raycast(partToRotate.position, enemy.transform.position - partToRotate.position, out hit, range)) {
+            if (hit.transform.tag != "Enemy") {
+                return false;
+            }
+        }
+
         switch (RealPlacement.LookDirection) {
             case Placement.Facing.Up:
                 return transform.position.y <= enemy.transform.position.y;

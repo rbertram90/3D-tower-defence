@@ -7,8 +7,8 @@ public class MoneyUI : NetworkBehaviour {
 
 	void Update ()
     {
-        if (NetworkManager.LocalClient != null) {
-            moneyText.text = "£" + NetworkManager.LocalClient.PlayerObject.GetComponent<Player>().Balance.Value;
+        if (GameManager.Instance.GetLocalPlayer() != null) {
+            moneyText.text = "£" + GameManager.Instance.GetLocalPlayer().Balance.Value;
         }
         else {
             moneyText.text = "£0";

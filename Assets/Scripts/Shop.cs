@@ -9,7 +9,7 @@ public class Shop : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-		bM = BuildManager.instance;
+		bM = BuildManager.Instance;
 
         // Create the buttons for the shop
         // Add new options by adding a Buildable prefab to the BuildManager.

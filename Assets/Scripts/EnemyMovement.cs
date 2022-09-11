@@ -46,7 +46,7 @@ public class EnemyMovement : NetworkBehaviour {
     void EndPath()
     {
         // Enemy has reached the end without being shot by player.
-        WaveSpawner.instance.notifyDeath(enemy, false);
+        WaveSpawner.Instance.notifyDeath(enemy, false);
 
         Destroy(gameObject);
     }

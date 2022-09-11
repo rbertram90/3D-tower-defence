@@ -8,7 +8,7 @@ public class Player : NetworkBehaviour
 {
     public enum States { Busy, Ready };
 
-    public NetworkVariable<States> Status = new(default, default, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<States> Status = new();
     public NetworkVariable<NetworkString> Name = new();
     public NetworkVariable<ulong> ClientID = new();
     public NetworkVariable<int> Balance = new();
@@ -76,9 +76,16 @@ public class Player : NetworkBehaviour
         base.OnNetworkSpawn();
     }
 
-    public void ReadyUp()
+    [ServerRpc]
+    public void ReadyUpServerRpc(ServerRpcParams serverRpcParams = default)
     {
-        Status.Value = States.Ready;
+        var clientId = serverRpcParams.Receive.SenderClientId;
+
+        var player = PlayerStats.Instance.GetPlayerByClientId(clientId);
+
+        if (player != null) {
+            player.Status.Value = States.Ready;
+        }
     }
 
 }

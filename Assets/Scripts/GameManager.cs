@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : NetworkBehaviour
 {
-    public static GameManager instance;
-    
+    private static GameManager _instance;
+    public static GameManager Instance { get { return _instance; } }
+
     [HideInInspector]
     public static bool gameEnded;
     public Text killsText;
@@ -16,14 +19,17 @@ public class GameManager : NetworkBehaviour
     // Private variables
     private NetworkUI _networkUI;
 
+    private NetworkManager NM;
+
     // Network variables
-    public NetworkVariable<int> TotalKillsMade = new NetworkVariable<int>();
-    public NetworkVariable<int> KillsThisRound = new NetworkVariable<int>();
-    public NetworkVariable<int> Lives = new NetworkVariable<int>();
+    public NetworkVariable<int> TotalKillsMade = new();
+    public NetworkVariable<int> KillsThisRound = new();
+    public NetworkVariable<int> Lives = new();
+    private NetworkVariable<int> ActivePlayerCount = new();
 
-    private NetworkVariable<int> ActivePlayerCount = new NetworkVariable<int>();
+    private Player LocalPlayer;
 
-    public static Player LocalPlayer;
+    public float GameSpeed;
 
     public int PlayersInGame
     {
@@ -32,18 +38,42 @@ public class GameManager : NetworkBehaviour
 
     void Awake()
     {
-        instance = this; // singleton
+        // singleton
+        if (_instance != null && _instance != this) {
+            Destroy(gameObject);
+        }
+        else {
+            _instance = this;
+        }
     }
 
     public override void OnNetworkSpawn()
     {
-        LocalPlayer = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<Player>();
+        NM = FindObjectOfType<NetworkManager>();
+
+        GetLocalPlayer();
+    }
+
+    public Player GetLocalPlayer()
+    {
+        if (LocalPlayer != null) {
+            return LocalPlayer;
+        }
+
+        try {
+            LocalPlayer = NM.LocalClient.PlayerObject.GetComponent<Player>();
+            return LocalPlayer;
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 
     // Use this for initialization
     void Start ()
     {
-        Time.timeScale = 1f;
+        // Time.timeScale = 1f;
+        Time.timeScale = GameSpeed;
         gameEnded = false;
         ActivePlayerCount.Value = 1;
         Lives.Value = 20;
@@ -87,6 +117,7 @@ public class GameManager : NetworkBehaviour
     void Update ()
     {
         killsText.text = "Kills: total = " + TotalKillsMade.Value + ", round = " + KillsThisRound.Value;
+        Time.timeScale = Mathf.Abs(GameSpeed); // useful when debugging things
 
         if (gameEnded) {
             return;

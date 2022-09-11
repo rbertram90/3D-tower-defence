@@ -12,6 +12,12 @@ public class Placement : NetworkBehaviour
     [HideInInspector]
     public GameObject turret;
 
+    // Determine on build if this collides with any
+    // NoPlacementZones if it does, then no turret
+    // can be built on it.
+    [HideInInspector]
+    public bool IsSuitableForBuilding = true;
+
     private Renderer rend;
     private Color startColor;
 
@@ -34,12 +40,7 @@ public class Placement : NetworkBehaviour
     {
         rend = GetComponent<Renderer>();
         startColor = rend.material.color;
-        bM = BuildManager.instance;
-    }
-
-    public void performOnMouseDown()
-    {
-        OnMouseDown();
+        bM = BuildManager.Instance;
     }
 
     void OnMouseDown()
@@ -77,7 +78,7 @@ public class Placement : NetworkBehaviour
             if(canSell) SellPlacement();
         }
 
-        if (!bM.CanBuild) {
+        if (!bM.CanBuild || !IsSuitableForBuilding) {
             Debug.Log("Returning as cannot build");
             return;
         }
@@ -85,40 +86,54 @@ public class Placement : NetworkBehaviour
         BuildTurretServerRpc(bM.GetTurretToBuild());
     }
 
+    void OnMouseEnter()
+    {
+        // Are we hoving over an UI element
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        if (bM.GetBuildMode() == "Sell") {
+            rend.material.color = sellColor;
+        }
+
+        if (!bM.CanBuild) {
+            return;
+        }
+
+        if (!IsSuitableForBuilding) {
+            rend.material.color = notEnoughMoneyColor;
+            return;
+        }
+
+        if (bM.HasMoney) {
+            rend.material.color = hoverColor;
+        }
+        else {
+            rend.material.color = notEnoughMoneyColor;
+        }
+    }
+
+    void OnMouseExit()
+    {
+        rend.material.color = startColor;
+    }
+
+    public void performOnMouseDown()
+    {
+        OnMouseDown();
+    }
+
     void SellPlacement()
     {
         if (IsHost) {
             // @todo make this a serverrpc?
-            GameManager.LocalPlayer.Balance.Value += 25;
+            GameManager.Instance.GetLocalPlayer().Balance.Value += 25;
         }
 
         GameObject effect = Instantiate(bM.sellEffect, GetBuildPosition(), Quaternion.identity);
         Destroy(effect, 3f);
 
         Destroy(transform.parent.gameObject);
-    }
-
-    void OnMouseEnter ()
-    {
-        // Are we hoving over an UI element
-        if (EventSystem.current.IsPointerOverGameObject())
-            return;
-
-        if (bM.GetBuildMode() == "Sell")
-            rend.material.color = sellColor;
-
-        if (!bM.CanBuild)
-            return;
-
-        if (bM.HasMoney)
-            rend.material.color = hoverColor;
-        else
-            rend.material.color = notEnoughMoneyColor;
-    }
-
-    void OnMouseExit ()
-    {
-        rend.material.color = startColor;
     }
 
     // Who is this owned by?!
@@ -197,7 +212,7 @@ public class Placement : NetworkBehaviour
             return;
         }
 
-        if (GameManager.LocalPlayer.Balance.Value < UpgradeCost) {
+        if (GameManager.Instance.GetLocalPlayer().Balance.Value < UpgradeCost) {
             // Not enough monies
             Debug.Log("Cannot upgrade, insufficient funds.");
             return;
@@ -207,7 +222,7 @@ public class Placement : NetworkBehaviour
 
         if (IsHost) {
             // @todo do this in the RPC or make variable owner updatable?
-            GameManager.LocalPlayer.Balance.Value -= UpgradeCost;
+            GameManager.Instance.GetLocalPlayer().Balance.Value -= UpgradeCost;
         }
 
         // UpgradeTurretServerRpc();
@@ -221,7 +236,7 @@ public class Placement : NetworkBehaviour
 
     public void SellTurret()
     {
-        GameManager.LocalPlayer.Balance.Value += 50; // @todo work something out for this.
+        GameManager.Instance.GetLocalPlayer().Balance.Value += 50; // @todo work something out for this.
 
         GameObject effect = (GameObject)Instantiate(bM.sellEffect, GetBuildPosition(), Quaternion.identity);
         Destroy(effect, 3f);

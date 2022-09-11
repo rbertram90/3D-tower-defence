@@ -75,14 +75,14 @@ public class PlacementUI : MonoBehaviour {
         target.UpgradeTurret();
 
         // Close menu
-        BuildManager.instance.DeselectPlacement();
+        BuildManager.Instance.DeselectPlacement();
     }
 
     public void Sell()
     {
         target.SellTurret();
 
-        BuildManager.instance.DeselectPlacement();
+        BuildManager.Instance.DeselectPlacement();
     }
 
     // onclick function set in Unity inspector

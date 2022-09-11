@@ -9,6 +9,7 @@ TagManager:
   - Placepoint
   - Turret
   - MapPlacepoint
+  - NoPlacementZone
   layers:
   - Default
   - TransparentFX

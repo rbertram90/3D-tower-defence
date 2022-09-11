@@ -1,26 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEngine;
 
 public class ReadyUpButton : NetworkBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void OnClick()
     {
-        Player p = NetworkManager.LocalClient.PlayerObject.GetComponent<Player>();
-        p.ReadyUp();
+        GameManager.Instance.GetLocalPlayer().ReadyUpServerRpc();
     }
 
     public override void OnNetworkSpawn()

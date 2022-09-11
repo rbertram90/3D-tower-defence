@@ -26,8 +26,8 @@ public class Turret3D : AbstractTurret, IBuildable
     // Use this for initialization
     void Start()
     {
-        // Search for targets every 1/2 second
-        InvokeRepeating("UpdateTarget", 0f, 0.5f);
+        // Search for targets every 1/10 second
+        InvokeRepeating("UpdateTarget", 0f, 0.1f);
 
         targetingMode = TargetingMode.Closest;
 
@@ -46,7 +46,9 @@ public class Turret3D : AbstractTurret, IBuildable
             return;
         }
 
-        LockOnTarget();
+        if (canShoot(target.gameObject, range)) {
+            LockOnTarget();
+        }
 
         if (fireCountdown <= 0f) {
             Shoot();

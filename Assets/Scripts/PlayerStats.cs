@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEngine.UI;
 using System;
 
 /**
@@ -10,11 +7,17 @@ using System;
  */
 public class PlayerStats : NetworkBehaviour
 {
-    public static PlayerStats instance;
+    private static PlayerStats _instance;
+    public static PlayerStats Instance { get { return _instance; } }
 
     void Awake()
     {
-        instance = this;
+        if (_instance != null && _instance != this) {
+            Destroy(gameObject);
+        }
+        else {
+            _instance = this;
+        }
     }
 
     public bool PlayerIsHost
@@ -31,5 +34,14 @@ public class PlayerStats : NetworkBehaviour
         foreach (KeyValuePair<ulong, NetworkClient> client in NetworkManager.Singleton.ConnectedClients) {
             processAction(client.Value.PlayerObject.GetComponent<Player>());
         }
+    }
+
+    public Player GetPlayerByClientId(ulong clientId)
+    {
+        if (NetworkManager.ConnectedClients.ContainsKey(clientId)) {
+            return NetworkManager.ConnectedClients[clientId].PlayerObject.GetComponent<Player>();
+        }
+
+        return null;
     }
 }

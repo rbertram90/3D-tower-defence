@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class BuildManager : MonoBehaviour {
 
-    public static BuildManager instance;
-    
+    private static BuildManager _instance;
+    public static BuildManager Instance { get { return _instance; } }
+
     private int turretToBuild; // Once turret has been selected on the menu always do this
     private Placement selectedPlacement; // Currently selected placement
     public GameObject buildEffect; // Effect to show when item is built
@@ -18,14 +19,23 @@ public class BuildManager : MonoBehaviour {
     void Awake ()
     {
         sellMode = false;
-        instance = this; // singleton
+
+        if (_instance != null && _instance != this) {
+            Destroy(gameObject);
+        }
+        else {
+            _instance = this;
+        }
     }
 
     // Dynamic Property
     public bool CanBuild { get { return turretToBuild != -1; } }
     public bool HasMoney {
         get {
-            return GameManager.LocalPlayer.Balance.Value >= 0;
+            if (GameManager.Instance.GetLocalPlayer()) {
+                return GameManager.Instance.GetLocalPlayer().Balance.Value >= 0;
+            }
+            return false;
         }
     }
 

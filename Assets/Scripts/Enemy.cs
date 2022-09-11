@@ -1,7 +1,4 @@
-﻿using Mono.Cecil.Cil;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 public class Enemy : NetworkBehaviour {
@@ -25,8 +22,8 @@ public class Enemy : NetworkBehaviour {
 
 	void Start ()
     {
-        gM = GameManager.instance;
-        wS = WaveSpawner.instance;
+        gM = GameManager.Instance;
+        wS = WaveSpawner.Instance;
 
         if (IsHost) {
             // Server sets the speed.
@@ -46,7 +43,7 @@ public class Enemy : NetworkBehaviour {
                 // Enemy has been killed
                 // Host only
                 if (IsHost) {
-                    PlayerStats.instance.DoForAllPlayers((Player p) => {
+                    PlayerStats.Instance.DoForAllPlayers((Player p) => {
                         p.Balance.Value += 50;
                     });
 

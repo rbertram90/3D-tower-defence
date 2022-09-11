@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 23636533523480744}
   - component: {fileID: 65134759016288358}
   - component: {fileID: 114061787908795898}
+  - component: {fileID: 586837562595918362}
   m_Layer: 0
   m_Name: Top
   m_TagString: Placepoint
@@ -115,12 +116,23 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
-  turretBlueprint:
-    prefab: {fileID: 0}
-    cost: 0
-    upgradedPrefab: {fileID: 0}
-    upgradeCost: 0
   LookDirection: 0
+--- !u!54 &586837562595918362
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025358714037004}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1215145917732108
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,6 +146,7 @@ GameObject:
   - component: {fileID: 23696926479072264}
   - component: {fileID: 65187546653619378}
   - component: {fileID: 114652680475254238}
+  - component: {fileID: 8924122286976603476}
   m_Layer: 0
   m_Name: Front
   m_TagString: Placepoint
@@ -236,12 +249,23 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
-  turretBlueprint:
-    prefab: {fileID: 0}
-    cost: 0
-    upgradedPrefab: {fileID: 0}
-    upgradeCost: 0
   LookDirection: 4
+--- !u!54 &8924122286976603476
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215145917732108}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1273867576874552
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,6 +279,7 @@ GameObject:
   - component: {fileID: 23364926422884964}
   - component: {fileID: 65955831781226988}
   - component: {fileID: 114688453987359494}
+  - component: {fileID: 4278948079496997775}
   m_Layer: 0
   m_Name: Right
   m_TagString: Placepoint
@@ -357,12 +382,23 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
-  turretBlueprint:
-    prefab: {fileID: 0}
-    cost: 0
-    upgradedPrefab: {fileID: 0}
-    upgradeCost: 0
   LookDirection: 3
+--- !u!54 &4278948079496997775
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273867576874552}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1479437963122106
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,6 +495,7 @@ GameObject:
   - component: {fileID: 23162426163156476}
   - component: {fileID: 65312443985132344}
   - component: {fileID: 114819358811269898}
+  - component: {fileID: 4792955086673571904}
   m_Layer: 0
   m_Name: Bottom
   m_TagString: Placepoint
@@ -561,12 +598,23 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
-  turretBlueprint:
-    prefab: {fileID: 0}
-    cost: 0
-    upgradedPrefab: {fileID: 0}
-    upgradeCost: 0
   LookDirection: 1
+--- !u!54 &4792955086673571904
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694254789423872}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1729815940842078
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,6 +698,7 @@ GameObject:
   - component: {fileID: 23696695072265842}
   - component: {fileID: 65935916408606044}
   - component: {fileID: 114073460565010610}
+  - component: {fileID: 38621511573869639}
   m_Layer: 0
   m_Name: Left
   m_TagString: Placepoint
@@ -752,12 +801,23 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
-  turretBlueprint:
-    prefab: {fileID: 0}
-    cost: 0
-    upgradedPrefab: {fileID: 0}
-    upgradeCost: 0
   LookDirection: 2
+--- !u!54 &38621511573869639
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848629745341568}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1953949693533198
 GameObject:
   m_ObjectHideFlags: 0
@@ -771,6 +831,7 @@ GameObject:
   - component: {fileID: 23522384326905710}
   - component: {fileID: 65461807962874244}
   - component: {fileID: 114631304538436982}
+  - component: {fileID: 5961808369681517997}
   m_Layer: 0
   m_Name: Back
   m_TagString: Placepoint
@@ -873,9 +934,20 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
-  turretBlueprint:
-    prefab: {fileID: 0}
-    cost: 0
-    upgradedPrefab: {fileID: 0}
-    upgradeCost: 0
   LookDirection: 5
+--- !u!54 &5961808369681517997
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953949693533198}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

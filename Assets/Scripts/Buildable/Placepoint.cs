@@ -39,7 +39,7 @@ public class Placepoint : NetworkBehaviour, IBuildable
                 positionOffset = new Vector3(-.5f, -.5f, 0);
                 break;
             case Placement.Facing.Right:
-                positionOffset = new Vector3(.5f, 0, 0);
+                positionOffset = new Vector3(.5f, -.5f, 0);
                 break;
         }
 
