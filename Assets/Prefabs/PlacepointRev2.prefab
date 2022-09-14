@@ -94,7 +94,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1025358714037004}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.057323713, y: 0.05732085, z: 0.018115444}
@@ -116,6 +116,7 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
+  IsSuitableForBuilding: 1
   LookDirection: 0
 --- !u!54 &586837562595918362
 Rigidbody:
@@ -227,7 +228,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1215145917732108}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.057323713, y: 0.057320837, z: 0.01811544}
@@ -249,6 +250,7 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
+  IsSuitableForBuilding: 1
   LookDirection: 4
 --- !u!54 &8924122286976603476
 Rigidbody:
@@ -360,7 +362,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1273867576874552}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.018123794, y: 0.05732093, z: 0.057321373}
@@ -382,6 +384,7 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
+  IsSuitableForBuilding: 1
   LookDirection: 3
 --- !u!54 &4278948079496997775
 Rigidbody:
@@ -576,7 +579,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1694254789423872}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.05731781, y: 0.018124321, z: 0.057328656}
@@ -598,6 +601,7 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
+  IsSuitableForBuilding: 1
   LookDirection: 1
 --- !u!54 &4792955086673571904
 Rigidbody:
@@ -779,7 +783,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1848629745341568}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.018123794, y: 0.05732093, z: 0.057321373}
@@ -801,6 +805,7 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
+  IsSuitableForBuilding: 1
   LookDirection: 2
 --- !u!54 &38621511573869639
 Rigidbody:
@@ -912,7 +917,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1953949693533198}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.05732405, y: 0.018123409, z: 0.057330318}
@@ -934,6 +939,7 @@ MonoBehaviour:
   sellColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   positionOffset: {x: 0, y: 0, z: 0}
   turret: {fileID: 0}
+  IsSuitableForBuilding: 1
   LookDirection: 5
 --- !u!54 &5961808369681517997
 Rigidbody:

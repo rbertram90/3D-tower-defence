@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class BuildManager : MonoBehaviour {
 
     private static BuildManager _instance;
     public static BuildManager Instance { get { return _instance; } }
 
-    private int turretToBuild; // Once turret has been selected on the menu always do this
+    private int turretToBuild = -1; // Selected shop item
     private Placement selectedPlacement; // Currently selected placement
     public GameObject buildEffect; // Effect to show when item is built
     public GameObject sellEffect; // Effect to show when item is sold
@@ -29,7 +30,7 @@ public class BuildManager : MonoBehaviour {
     }
 
     // Dynamic Property
-    public bool CanBuild { get { return turretToBuild != -1; } }
+    public bool IsInBuildMode { get { return turretToBuild != -1; } }
     public bool HasMoney {
         get {
             if (GameManager.Instance.GetLocalPlayer()) {
@@ -49,22 +50,51 @@ public class BuildManager : MonoBehaviour {
             return;
         }
 
+        if (selectedPlacement != null) {
+            if (selectedPlacement.turret.transform.Find("ShootRadius") != null) {
+                selectedPlacement.turret.transform.Find("ShootRadius").gameObject.SetActive(false);
+            }
+        }
+
         selectedPlacement = placement;
-        turretToBuild = -1;
+
+        DeselectTurretToBuild();
 
         placementUI.SetTarget(placement);
         placementUI.Show();
 
-        if (placement.turret.transform.GetChild(2).name == "ShootRadius") {
-            placement.turret.transform.GetChild(2).gameObject.SetActive(true);
+        if (placement.turret.transform.Find("ShootRadius") != null) {
+            placement.turret.transform.Find("ShootRadius").gameObject.SetActive(true);
         }
     }
 
     public void SelectTurretToBuild(int turret)
     {
+        if (turretToBuild == turret) {
+            DeselectTurretToBuild();
+            return;
+        }
+
         turretToBuild = turret;
         DeselectPlacement();
         DisableSellMode();
+
+        foreach (GameObject button in Shop.Buttons) {
+            button.transform.Find("ActiveBorder").gameObject.SetActive(false);
+        }
+
+        Shop.Buttons[turret].transform.Find("ActiveBorder").gameObject.SetActive(true);
+    }
+
+    public void DeselectTurretToBuild()
+    {
+        if (turretToBuild == -1) {
+            return;
+        }
+
+        Shop.Buttons[turretToBuild].transform.Find("ActiveBorder").gameObject.SetActive(false);
+
+        turretToBuild = -1;
     }
 
     public int GetTurretToBuild()

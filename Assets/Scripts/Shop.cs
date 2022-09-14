@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 // Note - not UnityEngine.UIElements ?
 
 public class Shop : MonoBehaviour
 {
     BuildManager bM;
+
+    public static List<GameObject> Buttons = new();
 
     // Use this for initialization
     void Start ()
@@ -18,12 +21,10 @@ public class Shop : MonoBehaviour
 
             GameObject turretButton = Instantiate(build.ShopButton, transform.position, Quaternion.identity);
 
+            Buttons.Add(turretButton);
+
             turretButton.GetComponent<Button>().onClick.AddListener(() => {
                 bM.SelectTurretToBuild(build.ShopIdentifier);
-
-                Button btn = turretButton.GetComponent<Button>();
-                // btn.style.borderBottomColor = Color.green;
-                // btn.style.borderBottomWidth = 3;
             });
 
             turretButton.transform.SetParent(this.transform);

@@ -33,6 +33,13 @@ public class PlacementUI : MonoBehaviour {
     public void SetTarget(Placement target)
     {
         this.target = target;
+
+        if (target.turret == null) {
+            // We've just clicked a placement on a placepoint so give the option to sell?
+            target.turret = target.transform.parent.gameObject;
+            // return;
+        }
+
         turret = target.turret.GetComponent<IBuildable>();
 
         // includes offset
@@ -43,12 +50,27 @@ public class PlacementUI : MonoBehaviour {
 
         switch (turret.GetType().ToString()) {
             case "Turret3D":
-                Turret3D turret3 = (Turret3D)turret;
+                Turret3D turret3 = (Turret3D) turret;
                 int MaxLevel = Turret3D.MaxLevel;
                 if (turret3.Level.Value < MaxLevel) {
                     upgradeCost.text = "£" + Turret3D.UpgradeCosts[turret3.Level.Value - 1].ToString();
                     upgradeButton.interactable = true;
                 }
+                closestButton.interactable = true;
+                furthestButton.interactable = true;
+                stongestButton.interactable = true;
+                weakestButton.interactable = true;
+                fastestButton.interactable = true;
+                slowestButton.interactable = true;
+                break;
+            case "Placepoint":
+                // Placepoint placepoint = (Placepoint) turret;
+                closestButton.interactable = false;
+                furthestButton.interactable = false;
+                stongestButton.interactable = false;
+                weakestButton.interactable = false;
+                fastestButton.interactable = false;
+                slowestButton.interactable = false;
                 break;
         }
 

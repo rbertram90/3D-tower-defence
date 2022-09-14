@@ -49,9 +49,8 @@ public class Placement : NetworkBehaviour
             return;
         }
 
-        if (turret != null)
-        {
-            // Already turret
+        if (turret != null) {
+            // Already got a turret attached
             switch (bM.GetBuildMode())
             {
                 case "Sell":
@@ -62,28 +61,25 @@ public class Placement : NetworkBehaviour
                     return;
             }
         }
-        else if (gameObject.tag == "Placepoint" && bM.GetBuildMode() == "Sell")
-        {
+        else if (bM.IsInBuildMode && IsSuitableForBuilding) {
+            BuildTurretServerRpc(bM.GetTurretToBuild());
+        }
+        // If it's not a world placement
+        else if (gameObject.tag == "Placepoint") {
+            bM.SelectPlacement(this);
+            /*
             bool canSell = true;
 
-            for (int i = 0; i < transform.parent.childCount; i++)
-            {
+            for (int i = 0; i < transform.parent.childCount; i++) {
                 Transform child = transform.parent.GetChild(i);
-                if(child.tag == "Placepoint" && child.GetComponent<Placement>().turret != null)
-                {
+                if(child.tag == "Placepoint" && child.GetComponent<Placement>().turret != null) {
                     canSell = false;
                 }
             }
-
+            
             if(canSell) SellPlacement();
+            */
         }
-
-        if (!bM.CanBuild || !IsSuitableForBuilding) {
-            Debug.Log("Returning as cannot build");
-            return;
-        }
-
-        BuildTurretServerRpc(bM.GetTurretToBuild());
     }
 
     void OnMouseEnter()
@@ -96,26 +92,33 @@ public class Placement : NetworkBehaviour
             rend.material.color = sellColor;
         }
 
-        if (!bM.CanBuild) {
+        // Have we got a shop object selected?
+        // If not use this yellow colour
+        if (!bM.IsInBuildMode) {
+            rend.material.color = sellColor;
             return;
         }
 
-        if (!IsSuitableForBuilding) {
-            rend.material.color = notEnoughMoneyColor;
-            return;
-        }
-
-        if (bM.HasMoney) {
-            rend.material.color = hoverColor;
-        }
-        else {
+        // Trying to build
+        if (!IsSuitableForBuilding || !bM.HasMoney) {
             rend.material.color = notEnoughMoneyColor;
         }
+        
+        rend.material.color = hoverColor;
     }
 
     void OnMouseExit()
     {
         rend.material.color = startColor;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // Debug.Log("trigger enter with " + other.name);
+
+        if (other.GetComponent<Placement>() != null) {
+            turret = other.transform.parent.gameObject;
+        }
     }
 
     public void performOnMouseDown()
@@ -185,9 +188,14 @@ public class Placement : NetworkBehaviour
         // Set the assigned turret - this will need to be a network variable?
         this.turret = turret;
 
-        // turretBlueprint = blueprint;
-
+        // Create the build affect
         GameObject effect = Instantiate(bM.buildEffect, GetBuildPosition(), Quaternion.identity);
+
+        // Spawn for everyone
+        // effect.GetComponent<NetworkObject>().Spawn();
+
+        // Destroy for everyone - @todo how do we do this in a few seconds?
+        // effect.GetComponent<NetworkObject>().Despawn();
         Destroy(effect, 3f);
     }
 
