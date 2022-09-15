@@ -36,11 +36,13 @@ public class PlacementUI : MonoBehaviour {
 
         if (target.turret == null) {
             // We've just clicked a placement on a placepoint so give the option to sell?
-            target.turret = target.transform.parent.gameObject;
+            // target.turret = target.transform.parent.gameObject;
             // return;
+            turret = target.transform.parent.gameObject.GetComponent<IBuildable>();
         }
-
-        turret = target.turret.GetComponent<IBuildable>();
+        else {
+            turret = target.turret.GetComponent<IBuildable>();
+        }
 
         // includes offset
         transform.position = target.GetBuildPosition();

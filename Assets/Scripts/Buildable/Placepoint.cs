@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using System;
+using Unity.Netcode;
 using UnityEngine;
 
 public class Placepoint : NetworkBehaviour, IBuildable
@@ -18,6 +19,11 @@ public class Placepoint : NetworkBehaviour, IBuildable
     {
         get => _targetingMode;
         set => _targetingMode = value;
+    }
+
+    void Start()
+    {
+        name = Guid.NewGuid().ToString("N");
     }
 
     public Vector3 GetBuildPosition(Placement parent)

@@ -67,29 +67,14 @@ public class Placement : NetworkBehaviour
         // If it's not a world placement
         else if (gameObject.tag == "Placepoint") {
             bM.SelectPlacement(this);
-            /*
-            bool canSell = true;
-
-            for (int i = 0; i < transform.parent.childCount; i++) {
-                Transform child = transform.parent.GetChild(i);
-                if(child.tag == "Placepoint" && child.GetComponent<Placement>().turret != null) {
-                    canSell = false;
-                }
-            }
-            
-            if(canSell) SellPlacement();
-            */
         }
     }
 
     void OnMouseEnter()
     {
         // Are we hoving over an UI element
-        if (EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current.IsPointerOverGameObject()) {
             return;
-
-        if (bM.GetBuildMode() == "Sell") {
-            rend.material.color = sellColor;
         }
 
         // Have we got a shop object selected?
@@ -102,6 +87,7 @@ public class Placement : NetworkBehaviour
         // Trying to build
         if (!IsSuitableForBuilding || !bM.HasMoney) {
             rend.material.color = notEnoughMoneyColor;
+            return;
         }
         
         rend.material.color = hoverColor;
@@ -244,12 +230,65 @@ public class Placement : NetworkBehaviour
 
     public void SellTurret()
     {
-        GameManager.Instance.GetLocalPlayer().Balance.Value += 50; // @todo work something out for this.
+        // Note - when an empty placement is clicked on a placepoint
+        // 'turret' is the placepoint itself
+        GameObject localTurret;
+        if (turret == null) {
+            localTurret = transform.parent.gameObject;
+        }
+        else {
+            localTurret = turret;
+        }
 
-        GameObject effect = (GameObject)Instantiate(bM.sellEffect, GetBuildPosition(), Quaternion.identity);
+        if (localTurret.GetComponent<Placepoint>() != null) {
+            bool canSell = true;
+            int attachedPlacepoints = 0;
+            bool worldPlacepoint = false;
+
+            for (int i = 0; i < localTurret.transform.childCount; i++) {
+                Transform child = localTurret.transform.GetChild(i);
+
+                if (child.GetComponent<Placement>() != null && child.GetComponent<Placement>().turret != null) {
+                    GameObject attachedTurret = child.GetComponent<Placement>().turret;
+
+                    if (attachedTurret.GetComponent<Placepoint>() != null) {
+                        // It's a placepoint...
+                        attachedPlacepoints++;
+                    }
+                    else if (attachedTurret.CompareTag("MapPlacepoint")) {
+                        worldPlacepoint = true;
+                    }
+                    else {
+                        canSell = false; // cannot sell with an attached turret
+                        break;
+                    }
+
+                    if (attachedPlacepoints >= 1 && worldPlacepoint) {
+                        canSell = false;
+                        break;
+                    }
+                    else if (attachedPlacepoints > 1) {
+                        canSell = false; // cannot sell with more than 1 other attached placepoint
+                        // little bit simple logic - really need to check if this is in the critical
+                        // path back to the world placement
+                        break;
+                    }
+                }
+            }
+
+            if (! canSell) {
+                return;
+            }
+        }
+
+        // Should we be giving the local player this money, sharing, or giving to the original buyer?
+        GameManager.Instance.GetLocalPlayer().Balance.Value += (localTurret.GetComponent<IBuildable>().Cost / 2);
+
+        // @todo Spawn and Despawn on server
+        GameObject effect = Instantiate(bM.sellEffect, GetBuildPosition(), Quaternion.identity);
         Destroy(effect, 3f);
 
-        Destroy(turret);
+        Destroy(localTurret);
     }
 
     public Vector3 GetBuildPosition()

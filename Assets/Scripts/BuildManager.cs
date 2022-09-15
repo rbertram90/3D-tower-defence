@@ -63,8 +63,10 @@ public class BuildManager : MonoBehaviour {
         placementUI.SetTarget(placement);
         placementUI.Show();
 
-        if (placement.turret.transform.Find("ShootRadius") != null) {
-            placement.turret.transform.Find("ShootRadius").gameObject.SetActive(true);
+        if (placement.turret != null) {
+            if (placement.turret.transform.Find("ShootRadius") != null) {
+                placement.turret.transform.Find("ShootRadius").gameObject.SetActive(true);
+            }
         }
     }
 

@@ -3702,7 +3702,7 @@ PrefabInstance:
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}
       propertyPath: m_Name
-      value: Placepoint2 (4)
+      value: WorldPlacement (4)
       objectReference: {fileID: 0}
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}
@@ -18176,7 +18176,7 @@ PrefabInstance:
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}
       propertyPath: m_Name
-      value: Placepoint2 (3)
+      value: WorldPlacement (3)
       objectReference: {fileID: 0}
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}
@@ -20824,7 +20824,7 @@ PrefabInstance:
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}
       propertyPath: m_Name
-      value: Placepoint2 (2)
+      value: WorldPlacement (2)
       objectReference: {fileID: 0}
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}
@@ -29703,7 +29703,7 @@ PrefabInstance:
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}
       propertyPath: m_Name
-      value: Placepoint2 (1)
+      value: WorldPlacement (1)
       objectReference: {fileID: 0}
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}
@@ -30451,7 +30451,7 @@ PrefabInstance:
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}
       propertyPath: m_Name
-      value: Placepoint2 (5)
+      value: WorldPlacement (5)
       objectReference: {fileID: 0}
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}
@@ -30818,7 +30818,7 @@ PrefabInstance:
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}
       propertyPath: m_Name
-      value: Placepoint2
+      value: WorldPlacement
       objectReference: {fileID: 0}
     - target: {fileID: 4894408049801054517, guid: aef0445c72cc97948a9305ff8f6f22d8,
         type: 3}

@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5235362669342757775}
   - component: {fileID: 4968707314263259085}
   m_Layer: 0
-  m_Name: Placepoint2
-  m_TagString: Untagged
+  m_Name: WorldPlacement
+  m_TagString: MapPlacepoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
